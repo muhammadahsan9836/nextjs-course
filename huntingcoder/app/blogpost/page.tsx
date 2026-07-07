@@ -1,30 +1,41 @@
-// 1. IMPORT LINK AT THE TOP!
-import Link from "next/link"; 
+import Link from "next/link";
 
-export default function BlogPost() {
+export default async function BlogPost() {
+  const res = await fetch("http://localhost:3000/api/blogs");
+  const blogs = await res.json();
+
+  // 👇 SAFETY CHECK: If blogs is NOT an array, stop the crash and show a message.
+  if (!Array.isArray(blogs)) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-black px-8 py-16 text-white">
+        <h1 className="text-3xl font-bold">No blogs found</h1>
+        <p className="text-zinc-400 mt-2">The API returned a single object instead of an array.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen flex-col items-center bg-black px-8 py-16">
-      <main className="w-full max-w-3xl">
+    <div className="flex min-h-screen flex-col items-center bg-black px-8 py-16 text-white">
+      <main className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        <div className="group bg-gray-900 border border-gray-700 rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-gray-400">
-          
-          {/* 2. WRAP THE TITLE WITH LINK */}
-          <Link href="/blogpost/how-to-learn-javascript-in-2026">
-            <h2 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors cursor-pointer hover:underline">
-              How to learn Javascript in 2026
-            </h2>
-          </Link>
-          
-          <p className="text-zinc-400 leading-relaxed">
-            Javascript is a programming language that is used to make web pages
-            interactive. It is a client-side scripting language, which means that it
-            runs on the user's computer rather than on the server.
-          </p>
-
-          <div className="mt-4 text-blue-500 font-medium group-hover:underline cursor-pointer">
-            Read More &rarr;
+        {blogs.map((blogItem: any) => (
+          <div key={blogItem.slug} className="bg-gray-900 border border-gray-700 rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:border-gray-400">
+            
+            <Link href={`/blogpost/${blogItem.slug}`}>
+              <h3 className="text-xl font-bold mb-2 hover:text-blue-400 hover:underline cursor-pointer">
+                {blogItem.title}
+              </h3>
+            </Link>
+            
+            <p className="text-zinc-400 leading-relaxed text-sm">
+              {blogItem.content ? blogItem.content.substring(0, 100) + "..." : "Click to read more"}
+            </p>
+            
+            <Link href={`/blogpost/${blogItem.slug}`} className="mt-4 inline-block text-blue-500 font-medium hover:underline">
+              Read More &rarr;
+            </Link>
           </div>
-        </div>
+        ))}
 
       </main>
     </div>
