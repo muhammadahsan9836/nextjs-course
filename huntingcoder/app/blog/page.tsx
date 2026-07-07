@@ -3,7 +3,7 @@ import Link from "next/link";
 // This is a Server Component. It fetches data directly without using useEffect!
 export default async function Blog() {
   // 1. Fetch your blog data from your API route
-  const res = await fetch("http://localhost:3000/api/blogs");
+  const res = await fetch("/api/blogs");
   const blogs = await res.json();
 
   return (
