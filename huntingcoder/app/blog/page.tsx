@@ -1,4 +1,5 @@
 import Link from "next/link";
+export const dynamic = 'force-dynamic';
 
 // This is a Server Component. It fetches data directly without using useEffect!
 export default async function Blog() {
