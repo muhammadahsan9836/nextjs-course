@@ -2,27 +2,25 @@ import Link from "next/link";
 import fs from "fs";
 import path from "path";
 
-// 1. Tells Next.js not to render this page during the build, 
-// so it doesn't crash on Vercel.
 export const dynamic = 'force-dynamic';
 
 export default async function BlogPost() {
-  // 2. Read the files directly from the 'public' folder
+  // ✅ CORRECT: Only point to the folder!
   const folderPath = path.join(process.cwd(), "public", "blogdata");
   const filenames = fs.readdirSync(folderPath);
 
-  // 3. Map the files into a clean array
   const blogs = filenames.map((filename) => {
     const filePath = path.join(folderPath, filename);
     const data = fs.readFileSync(filePath, "utf8");
     const blogData = JSON.parse(data);
-    return { 
-      ...blogData, 
-      slug: filename.replace('.json', '') 
+    return {
+      ...blogData,
+      slug: filename.replace('.json', '')
     };
   });
 
   return (
+    // ... Your existing UI code stays exactly the same below this ...
     <div className="flex min-h-screen flex-col items-center bg-black px-8 py-16 text-white">
       <main className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map((blogItem: any) => (
