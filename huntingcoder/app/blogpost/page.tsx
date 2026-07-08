@@ -5,10 +5,11 @@ import path from "path";
 export const dynamic = 'force-dynamic';
 
 export default async function BlogPost() {
-  // ✅ CORRECT: Only point to the folder!
+  // 1. Read the folder path correctly
   const folderPath = path.join(process.cwd(), "public", "blogdata");
   const filenames = fs.readdirSync(folderPath);
 
+  // 2. Map the files cleanly - NO EXTRA PARENTHESIS at the end
   const blogs = filenames.map((filename) => {
     const filePath = path.join(folderPath, filename);
     const data = fs.readFileSync(filePath, "utf8");
@@ -20,7 +21,6 @@ export default async function BlogPost() {
   });
 
   return (
-    // ... Your existing UI code stays exactly the same below this ...
     <div className="flex min-h-screen flex-col items-center bg-black px-8 py-16 text-white">
       <main className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map((blogItem: any) => (
