@@ -18,9 +18,19 @@ export async function POST(req) {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 
     return NextResponse.json({ message: "Contact saved successfully!" }, { status: 200 });
-  } catch (error: any) {
-    // 🚨 This will print the actual error into Vercel Function Logs
-    console.error("Error saving contact data:", error.message); 
-    return NextResponse.json({ message: `Error: ${error.message}` }, { status: 500 });
+  } 
+  catch (error) {
+    // 🚨 THIS safely handles the 'unknown' error without using TypeScript syntax
+    let errorMessage = "Unknown error occurred";
+    
+    // 1. Check at runtime if 'error' is actually an Error object
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    // 2. Print the error to Vercel Function Logs
+    console.error("Error saving contact data:", errorMessage); 
+    
+    return NextResponse.json({ message: `Error: ${errorMessage}` }, { status: 500 });
   }
 }
